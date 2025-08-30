@@ -34,7 +34,7 @@ export default function Home() {
             </>
           ):(
             <div>
-              <Message role='user' content='what is next js' />
+              <Message role="user" content="what is next js" />
             </div>
           )}
 
