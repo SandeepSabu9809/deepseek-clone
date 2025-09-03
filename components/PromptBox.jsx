@@ -10,6 +10,9 @@ const PromptBox = ({ setIsLoading, isLoading }) => {
   const [prompt, setPrompt] = useState('');
   const { user, chats, setChats, selectedChat, setSelectedChat } = useAppContext();
 
+  // Don't render if no chat is selected
+  //if (!selectedChat) return null;
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
