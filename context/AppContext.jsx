@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import axios from "axios"; 
 import { useAuth, useUser } from "@clerk/nextjs";
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -15,20 +15,12 @@ export const AppContextProvider = ({ children }) => {
   const { getToken } = useAuth();
 
   const [chats, setChats] = useState([]);
-  const [selectedChat, setSelectedChat] = useState({ messages: [] });
-  const [isCreatingChat, setIsCreatingChat] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [selectedChat, setSelectedChat] = useState(null);
 
   const createNewChat = async () => {
-    if (isCreatingChat) return;
-    setIsCreatingChat(true);
     try {
       if (!user) return null;
       const token = await getToken();
-      if (!token) {
-        toast.error("Authentication token not found");
-        return;
-      }
 
       await axios.post(
         "/api/chat/create",
@@ -40,22 +32,15 @@ export const AppContextProvider = ({ children }) => {
         }
       );
 
-      await fetchUserschats();
+      await fetchUserschats(); // ✅ added await to avoid race conditions
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
-    } finally {
-      setIsCreatingChat(false);
     }
   };
 
   const fetchUserschats = async () => {
-    setIsLoading(true);
     try {
       const token = await getToken();
-      if (!token) {
-        toast.error("Authentication token not found");
-        return;
-      }
 
       const { data } = await axios.get("/api/chat/get", {
         headers: {
@@ -63,27 +48,26 @@ export const AppContextProvider = ({ children }) => {
         },
       });
 
-      if (data.success && Array.isArray(data.data)) {
+      if (data.success) {
+        console.log(data.data);
         setChats(data.data);
 
         if (data.data.length === 0) {
-          if (!isCreatingChat) {
-            await createNewChat();
-          }
+          await createNewChat();
           return;
         } else {
+          // sort chats by last update
           data.data.sort(
             (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
           );
-          setSelectedChat({ ...data.data[0], messages: data.data[0].messages || [] });
+          setSelectedChat(data.data[0]);
+          console.log(data.data[0]);
         }
       } else {
-        toast.error("Failed to fetch chats: Invalid response");
+        toast.error("Failed to fetch chats");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -91,7 +75,7 @@ export const AppContextProvider = ({ children }) => {
     if (user) {
       fetchUserschats();
     }
-  }, [user, fetchUserschats]);
+  }, [user]);
 
   const value = {
     user,
@@ -101,8 +85,9 @@ export const AppContextProvider = ({ children }) => {
     setSelectedChat,
     fetchUserschats,
     createNewChat,
-    isLoading,
   };
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={value}>{children}</AppContext.Provider>
+  );
 };

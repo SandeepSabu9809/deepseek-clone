@@ -20,7 +20,7 @@ export default function Home() {
 
   useEffect(()=>{
     if(selectedChat){
-      setMessages(selectedChat.messages)
+      setMessages(selectedChat?.messages || []);
     }
   },[selectedChat])
 
@@ -60,7 +60,7 @@ export default function Home() {
             >
               <p className="fixed top-8 border border-transparent hover:border-gray-500/50 py-1 px-2 rounded-lg font-semibold mb-6">{selectedChat.name}</p>
             {messages.map((msg,index)=>{
-              return <Message key={index} role={msg.role} content={msg.content} />
+             return <Message key={index} role={msg.role} content={msg.content} />
             })}
             
             {
