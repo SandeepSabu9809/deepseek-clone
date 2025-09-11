@@ -32,13 +32,13 @@ export const AppContextProvider = ({ children }) => {
         }
       );
 
-      await fetchUserschats(); // ✅ added await to avoid race conditions
+      await fetchUsersChats(); // ✅ added await to avoid race conditions
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
     }
   };
 
-  const fetchUserschats = async () => {
+  const fetchUsersChats = async () => {
     try {
       const token = await getToken();
 
@@ -73,7 +73,7 @@ export const AppContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      fetchUserschats();
+      fetchUsersChats();
     }
   }, [user]);
 
@@ -83,7 +83,7 @@ export const AppContextProvider = ({ children }) => {
     setChats,
     selectedChat,
     setSelectedChat,
-    fetchUserschats,
+    fetchUsersChats,
     createNewChat,
   };
 
