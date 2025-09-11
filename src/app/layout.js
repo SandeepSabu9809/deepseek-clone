@@ -24,11 +24,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
 
-       {/* PWA meta tags */}
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#000000" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
-
+    
       <body className={`${inter.className} antialiased`}>
         <ClerkProvider>
           <AppContextProvider>
