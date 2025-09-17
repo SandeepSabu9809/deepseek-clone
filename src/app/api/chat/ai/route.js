@@ -33,7 +33,7 @@ export async function POST(req) {
     const completion = await openai.chat.completions.create({
       model: "meta-llama/llama-3.1-405b-instruct:free",
       messages: recentMessages,
-      // max_tokens: 500, // adjust if needed, must be under account limit
+      // max_tokens: 500, // adjust i needed, must be under account limit
     });
 
     // --- 3️⃣ Check for empty response ---
