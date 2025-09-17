@@ -31,11 +31,7 @@ export async function POST(req) {
 
     // --- 2️⃣ Set max_tokens explicitly to avoid 402 errors ---
     const completion = await openai.chat.completions.create({
-<<<<<<< HEAD
       model: "meta-llama/llama-3.1-405b-instruct:free",
-=======
-      // model: "deepseek/deepseek-r1",
->>>>>>> c7c88f188d1500acddd3284d3b239a8637a98cb5
       messages: recentMessages,
       // max_tokens: 500, // adjust if needed, must be under account limit
     });
