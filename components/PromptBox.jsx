@@ -84,7 +84,7 @@ const PromptBox = ({ setIsLoading, isLoading }) => {
             );
             return { ...prev, messages: updatedMessages };
           });
-        }, i * 30); // typing speed (adjust as needed)
+        }, i * 10); // typing speed (adjust as needed)
       });
 
       // 6️⃣ Update chats array as well
